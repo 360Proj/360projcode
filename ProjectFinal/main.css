@@ -1,0 +1,83 @@
+html *{
+    -webkit-user-select: none;
+}
+
+/*   buttons at top   */
+input{
+    width: 15em;
+    height: 7em;
+}
+
+/*   buttons div    */
+div#buttonBar{
+    margin-left: 20px;
+}
+
+/*   control line   */
+.controlLine{
+    stroke: lightgrey;
+    stroke-width: 7;
+    stroke-dasharray: 10, 10;
+}
+
+/*   control point   */
+.controlPoint{
+    fill: lightgrey;
+    stroke: pink;
+    stroke-width: 80;
+    stroke-opacity: 0.0;
+}
+
+/*   function path   */
+.path{
+    fill: none;
+    stroke: red;
+    stroke-width: 15;
+}
+
+/*  function point   */
+.point{
+    fill: black;
+    stroke: pink;
+    stroke-width: 80;
+    stroke-opacity: 0.0;
+}
+
+/*  main function + derivative view    */
+#main{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+}
+
+/*  derivative line    */
+.line{
+    stroke: rgb(0,0,255);
+    stroke-width: 5;
+}
+
+html, body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    -webkit-backface-visibility: hidden;
+}
+
+/*  main HTML view    */
+div#viz{
+    height: 86%;
+    width: 100%;
+    margin: 0;
+}
+
+/*  second derivative line    */
+.SDLine{
+    stroke: rgb(0,255,0);
+    stroke-width: 5;
+}
+
+/*   x and y axis   */
+.axis line, .axis path {
+    fill: none;
+    stroke: black;
+}

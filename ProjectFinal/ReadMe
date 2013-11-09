@@ -1,0 +1,42 @@
+Introduction
+
+
+This program is used to visualize univariate quadratic splines using both touch-based and mouse-based devices.
+On transformation of quadratic splines a derivative and second derivative view are updated.
+
+
+Run Program
+
+
+1) Run the program by opening the main.html page.
+
+2) Program specifically runs on safari for touch screen and mouse-based computers.
+
+3) Program would run on firefox except the window.event.preventDefault(), to hide the context window on right
+click events, is preventing the execution of certain functions. Can remove code and it will work fine,
+just right click menu will show up.
+
+
+How To Use
+
+
+1) Drag points + control points to change curve.
+
+1) Right click/long touch a point to remove it.
+
+2) Click/touch on curve to add a new point.
+
+*note: It may seem like a bug but if there is not enough distance between points (on the x-axis)
+a new point will not be added. This is checked with the addValidate function.
+
+3) Right click/long touch a control point to smooth the function.
+
+4) Right click/long touch a single point to restore it to two points.
+
+
+
+
+External Libraries Used
+
+
+D3 (Data-Driven Documents) ----------------->  http://d3js.org/

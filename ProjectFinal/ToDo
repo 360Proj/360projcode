@@ -1,0 +1,16 @@
+Still To Do
+
+1) cross-platform support: iPad, Android;
+1a) Add point should not modify current quadratic (add point on quadratic curve+set control points so the resulting 2 part spline is smooth)
+2) Improve coordinate and scaling (Work on the SVG view + coordinate system)
+2a) Import/Export feature doubling as a Save/Load feature
+3) Add additional transforms (conjugates, Moreau envelopes, and other convex operators)
+
+Nice to do in the far distant future:
+4) Add more/better gesture + touch events (limited by cross-browser/cross-platform requirement)
+5) Make program more visually appealing (css styles)
+6) cross-browser support: Firefox, Chrome (remove frames)
+7) Implement a save + load feature (Import/Export should be enough)
+[8) Getting control points to update smoothly on an add point event (see 1a) above)]
+9) How to handle adding a point when not enough room (on the x-axis)
+10) Touch events on path (sometimes difficult to add new points)

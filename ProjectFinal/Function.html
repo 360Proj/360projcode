@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel= "stylesheet" type= "text/css" href= "main.css">
+</head>
+<body>
+<br />
+<div id= "buttonBar">
+    <input id= "undoButton" type= "button" value= "Undo" onclick = "undo()" disabled />
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input id= "redoButton" type= "button" value= "Redo" onclick= "redo()" disabled />
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input id= "hideControls" type= "button" value= "Hide Controls" onclick = "hideControl()" />
+</div>
+<br />
+<div id= "viz"></div>
+<script type="text/javascript" src="D3/d3.v3.min.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="Function.js"></script>
+<script type= "text/javascript">
+
+    //starting coordinates of all 3 points and control points
+    var x1 = 200, y1 = 300, x2 = 400, y2 = 700, x3 = 600, y3 = 300;
+    var control1X = x1 + radius, control2X = x3 - radius;
+
+    //Create function starting view
+    createControlLine("dotLine1V", x1, y1, control1X, y2);
+    createControlLine("dotLine1H", x2, y2, control1X, y2);
+    createControlLine("dotLine2V", x3, y3, control2X, y2);
+    createControlLine("dotLine2H", x2, y2, control2X, y2);
+    createControlPoint("controlCircleMain1", control1X, y2, "mainPath1", "dotLine1V", "dotLine1H");
+    createControlPoint("controlCircleMain2", control2X, y2, "mainPath2", "dotLine2H", "dotLine2V");
+    createPath("mainPath1", ["M",x1,y1,"Q",control1X,y2,x2,y2].join(" "), "pointA", "pointB", "controlCircleMain1");
+    createPath("mainPath2", ["M",x2,y2,"Q",control2X,y2,x3,y3].join(" "), "pointB", "pointC", "controlCircleMain2");
+    createPoint("pointA", x1, y1, null, "mainPath1");
+    createPoint("pointB", x2, y2, "mainPath1", "mainPath2");
+    createPoint("pointC", x3, y3, "mainPath2", null);
+
+</script>
+</body>
+</html>

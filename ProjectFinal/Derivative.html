@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel= "stylesheet" type= "text/css" href= "main.css">
+</head>
+<body>
+<br />
+<div id= "buttonBar">
+    <input id= "derivButton" type= "button" value= "Derivative" onclick = "displayDerivative()" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="secondDButton" type= "button" value= "Second Derivative" onclick= "displaySecondDerivative()"/>
+</div>
+<br />
+<div id= "viz" ></div>
+<script type="text/javascript" src="D3/d3.v3.min.js"></script>
+<script type= "text/javascript" src= "main.js"></script>
+<script type="text/javascript" src="Derivative.js"></script>
+<script type="text/javascript" src= "SecondDerivative.js"></script>
+<script type="text/javascript">
+
+    //starting coordinates for derivative
+    var x1 = 200, x2 = 400, x3 = 400, x4 = 600, oldY1 = 300, oldY2 = 700, oldY3 = 700, oldY4 = 300;
+    var control1X = 220, control1Y = 700, control2X = 580, control2Y = 700;
+    var y1 = calculateNewY(x1, oldY1, control1X, control1Y), y2 = calculateNewY(control1X, control1Y, x2, oldY2),
+            y3 = calculateNewY(x3, oldY3, control2X, control2Y), y4 = calculateNewY(control2X, control2Y, x4, oldY4);
+
+    //create derivative starting view
+    createLine("mainLine1", x1, y1, x2, y2, "pointAa", "pointBb");
+    createLine("mainLine2", x3, y3, x4, y4, "pointBa", "pointCb");
+    createPoint("pointAa", x1, y1, "mainLine1");
+    createPoint("pointBb", x2, y2, "mainLine1");
+    createPoint("pointBa", x3, y3, "mainLine2");
+    createPoint("pointCb", x4, y4, "mainLine2");
+
+
+    //starting y coordinates for second derivative
+    var DDY1 = calculateNewYSD(x1, y1, x2, y2), DDY2 = calculateNewYSD(x3, y3, x4, y4);
+
+    //create second derivatives starting view
+    createSDLine("mainLine1d", x1, DDY1, x2, DDY1, "pointAad", "pointBbd");
+    createSDLine("mainLine2d", x3, DDY2, x4, DDY2, "pointBad", "pointCbd");
+    createSDPoint("pointAad", x1, DDY1, "mainLine1d");
+    createSDPoint("pointBbd", x2, DDY1, "mainLine1d");
+    createSDPoint("pointBad", x3, DDY2, "mainLine2d");
+    createSDPoint("pointCbd", x4, DDY2, "mainLine2d");
+
+</script>
+</body>
+</html>
