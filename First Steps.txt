@@ -1,0 +1,11 @@
+Setup versioning system
+license
+bit bucket
+or svn
+Documentation (not necessarily needed)
+track who is doing what
+Specifications
+
+matlev91@gmail.com
+
+ask if he knows the code
