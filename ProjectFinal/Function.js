@@ -313,7 +313,13 @@ function redo(){
 
 function add(){
     var rightNode = getReferenceElement(this, "rightNodeId"), leftNode = getReferenceElement(this, "leftNodeId");
-    var X = parseInt(d3.mouse(this)[0]), Y = parseInt(d3.mouse(this)[1]);
+	if(parseInt){
+		if(d3.mouse){
+			var X = parseInt(d3.mouse(this)[0]), Y = parseInt(d3.mouse(this)[1]);
+		}
+	}
+	else
+		var X = event.pageX, Y = event.pageY;
 
     //check if enough room to add new point
     if(!addValidate(X, leftNode, rightNode))
