@@ -369,7 +369,7 @@ function add(){
 
 function remove(){
 
-    window.event.preventDefault();          //prevent context menu showing
+   	if(typeof event != 'undefined') window.event.preventDefault();         //prevent context menu showing
 
     var rightPath, leftPath, rightNode, leftNode, controlC;
 
@@ -472,7 +472,7 @@ function specialCase(cx, cy){
 //move from 1 to 2 points
 function restore(){
 
-    window.event.preventDefault();          //prevent context menu showing
+   	if(typeof event != 'undefined') event.preventDefault();          //prevent context menu showing
 
     //validate 2nd point is in bounds
     var X = parseInt(this.getAttribute("cx")), Y = parseInt(this.getAttribute("cy"));
@@ -505,7 +505,7 @@ function smoothingCalculation(thisX, thisY, leftNodeX, leftNodeY, leftContX){
 
 function smoothing(){
 
-    window.event.preventDefault();          //prevent context menu showing
+   	if(typeof event != 'undefined') event.preventDefault();          //prevent context menu showing
 
     var X = this.getAttribute('cx');
     var Y = this.getAttribute('cy');
