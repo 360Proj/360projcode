@@ -362,6 +362,9 @@ function add(){
 
     //Moves right node on top of line
     moveToFront(rightNode);
+	
+	//Smooth graph after adding new point
+	smoothAdd(getElement("controlCircle"+idGlobal));
 
     //update derivative
     top.Deriv.addPoint(idGlobal, X, Y, leftNode, rightNode, controlCircle, getElement("controlCircle"+idGlobal));
@@ -530,6 +533,48 @@ function smoothing(){
     top.Deriv.movedControl(getReferenceElement(leftPath, 'leftNodeId'), leftNode, leftPointControl.getAttribute('cx'), newY);
 }
 
+//Try to smooth the graph after adding a point
+function smoothAdd(cpoint){
+
+ 	var X = cpoint.getAttribute('cx');
+    var Y = cpoint.getAttribute('cy');
+    var leftNode = getReferenceElement(getReferenceElement(cpoint, 'path'), 'leftNodeId');
+
+    if(leftNode.getAttribute('id') == 'pointA')      //if left node is start can't smooth
+        return;
+
+    var leftPath = getReferenceElement(leftNode, 'leftPathId');
+    var leftPointControl = getReferenceElement(leftPath, 'controlCircle');
+
+    //calculate newY + check its in bounds
+    var newY = smoothingCalculation(X,Y,leftNode.getAttribute('cx'),leftNode.getAttribute('cy'),leftPointControl.getAttribute('cx'));
+    newY = boundsCheck(newY, 0 + radius, height - radius);
+
+    //update controls + path
+    updateControlCircle(leftPointControl, leftPointControl.getAttribute('cx'), newY);
+    updatePathsControlPoint(leftPath, leftPointControl.getAttribute('cx'), newY);
+}
+
+//Remove all non-smooth points from the graph
+function smoothAll() {
+
+	//Get the right most control point
+	var pointC = getElement("pointC");
+	var cur_control = getReferenceElement(getReferenceElement(pointC, "leftPathId"), "controlCircle");
+	var leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');	
+	
+	//Add undo state
+	if(leftNode.getAttribute("id") != "pointA")
+		addUndoState();
+	
+	while(leftNode.getAttribute("id") != "pointA") { //continue smoothing points until we've reached the leftmost control
+		//Recycle smoothAdd function.  There's some redundancy in node checking
+		//but it does what we want without rewriting the smooth function
+		smoothAdd(cur_control); 
+		cur_control = getReferenceElement(getReferenceElement(leftNode, "leftPathId"), "controlCircle");
+		leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');
+	}
+}
 ///////////////////////////////////////Misc/Functions///////////////////////////////////////////////////
 
 //Add actions to clone
