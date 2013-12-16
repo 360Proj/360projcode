@@ -330,6 +330,9 @@ function add(){
     idGlobal += 1;      //update id
     var oldControlX, newControlX;
     var controlCircle = getReferenceElement(this, "controlCircle");
+	
+	//Are we adding the new point to the left or right of the path's control point? true = left, false = right
+	var smoothDir = getSmoothDirection(controlCircle, X);
 
     //get control x values for old and new control circles
     oldControlX = boundsCheck(controlCircle.getAttribute("cx"), parseInt(getReferenceElement(this, "leftNodeId").getAttribute("cx"))+radius, X-radius);
@@ -362,12 +365,15 @@ function add(){
 
     //Moves right node on top of line
     moveToFront(rightNode);
-	
-	//Smooth graph after adding new point
-	smoothAdd(getElement("controlCircle"+idGlobal));
 
     //update derivative
     top.Deriv.addPoint(idGlobal, X, Y, leftNode, rightNode, controlCircle, getElement("controlCircle"+idGlobal));
+	
+	//Smooth graph after adding new point
+	if(smoothDir)
+		smoothing(getElement("controlCircle"+idGlobal));
+	else
+		smoothRight(getReferenceElement(getReferenceElement(getElement("Point"+idGlobal), "leftPathId"), "controlCircle"));
 }
 
 function remove(){
@@ -506,8 +512,6 @@ function smoothingCalculation(thisX, thisY, leftNodeX, leftNodeY, leftContX){
         parseFloat(thisX) + ((parseFloat(thisY) - parseFloat(leftNodeY))/(parseFloat(thisX) - parseFloat(leftNodeX))) * parseFloat(leftContX);
 }
 
-
-
 function smoothing(el){
 
     if(typeof event != 'undefined') event.preventDefault();          //prevent context menu showing
@@ -541,6 +545,7 @@ function smoothing(el){
     //update Derivative
     top.Deriv.movedControl(getReferenceElement(leftPath, 'leftNodeId'), leftNode, leftPointControl.getAttribute('cx'), newY);
 }
+
 //Function to smooth all points from left to right
 function smoothAll(){
     //Gather all elements and their x co-ordinates into arrays
@@ -549,16 +554,13 @@ function smoothAll(){
 
     els[1] = getElement("controlCircleMain2");
 
-    xpoints[1] = els[1].getAttribute("cx");
-    
-    
+    xpoints[1] = els[1].getAttribute("cx");  
     var i = 1
     var zeroOut = 1;
 
     if (getElement("controlCircle1") != null){
         i = 2;
     }
-
 
     while(getElement("controlCircle"+(i-1)) != null){
         els[i] = getElement("controlCircle"+(i-1));
@@ -581,32 +583,38 @@ function smoothAll(){
         addUndoState();
         smoothing(els[zeroOut]);
     }
-    
-
 } 
 
-//Try to smooth the graph after adding a point
-function smoothAdd(cpoint){
+//Smooth from left to right instead of right to left
+function smoothRight(cpoint){
 
  	var X = cpoint.getAttribute('cx');
     var Y = cpoint.getAttribute('cy');
-    var leftNode = getReferenceElement(getReferenceElement(cpoint, 'path'), 'leftNodeId');
+    var rightNode = getReferenceElement(getReferenceElement(cpoint, 'path'), 'rightNodeId');
 
-    if(leftNode.getAttribute('id') == 'pointA')      //if left node is start can't smooth
+    if(rightNode.getAttribute('id') == 'pointC')      //if right node is end we can't smooth
         return;
 
-    var leftPath = getReferenceElement(leftNode, 'leftPathId');
-    var leftPointControl = getReferenceElement(leftPath, 'controlCircle');
+    var rightPath = getReferenceElement(rightNode, 'rightPathId');
+    var rightPointControl = getReferenceElement(rightPath, 'controlCircle');
 
     //calculate newY + check its in bounds
-    var newY = smoothingCalculation(X,Y,leftNode.getAttribute('cx'),leftNode.getAttribute('cy'),leftPointControl.getAttribute('cx'));
+    var newY = smoothingCalculation(X,Y,rightNode.getAttribute('cx'),rightNode.getAttribute('cy'),rightPointControl.getAttribute('cx'));
     newY = boundsCheck(newY, 0 + radius, height - radius);
 
     //update controls + path
-    updateControlCircle(leftPointControl, leftPointControl.getAttribute('cx'), newY);
-    updatePathsControlPoint(leftPath, leftPointControl.getAttribute('cx'), newY);
+    updateControlCircle(rightPointControl, rightPointControl.getAttribute('cx'), newY);
+    updatePathsControlPoint(rightPath, rightPointControl.getAttribute('cx'), newY);
+	
+    //update Derivative
+    top.Deriv.movedControl(getReferenceElement(rightPath, 'rightNodeId'), rightNode, rightPointControl.getAttribute('cx'), newY);
 }
 
+function getSmoothDirection(control, X) {
+
+	ctrlX = control.getAttribute("cx");
+	return X < ctrlX; //true = smooth left, false = smooth right
+}
 ///////////////////////////////////////Misc/Functions///////////////////////////////////////////////////
 
 //Add actions to clone
