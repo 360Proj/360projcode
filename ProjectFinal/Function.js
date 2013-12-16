@@ -541,12 +541,13 @@ function smoothing(el){
     //update Derivative
     top.Deriv.movedControl(getReferenceElement(leftPath, 'leftNodeId'), leftNode, leftPointControl.getAttribute('cx'), newY);
 }
-
+//Function to smooth all points from left to right
 function smoothAll(){
+    //Gather all elements and their x co-ordinates into arrays
     var els = [];
     var xpoints = [];
 
-    els[1] = getElement("controlCircleMain2"); //The problem lies with this point
+    els[1] = getElement("controlCircleMain2");
 
     xpoints[1] = els[1].getAttribute("cx");
     
@@ -565,6 +566,7 @@ function smoothAll(){
         i++;
     }
 
+    //performs smooth on each point from right to left on the graph. (as if you right clicked each point)
     for (var k = 1; k <= i ; k++){
         var curElx = null;
 
@@ -576,6 +578,7 @@ function smoothAll(){
         }
 
         xpoints[zeroOut] = 0;
+        addUndoState();
         smoothing(els[zeroOut]);
     }
     
@@ -604,26 +607,6 @@ function smoothAdd(cpoint){
     updatePathsControlPoint(leftPath, leftPointControl.getAttribute('cx'), newY);
 }
 
-//Remove all non-smooth points from the graph
-function smoothAll() {
-
-	//Get the right most control point
-	var pointC = getElement("pointC");
-	var cur_control = getReferenceElement(getReferenceElement(pointC, "leftPathId"), "controlCircle");
-	var leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');	
-	
-	//Add undo state
-	if(leftNode.getAttribute("id") != "pointA")
-		addUndoState();
-	
-	while(leftNode.getAttribute("id") != "pointA") { //continue smoothing points until we've reached the leftmost control
-		//Recycle smoothAdd function.  There's some redundancy in node checking
-		//but it does what we want without rewriting the smooth function
-		smoothAdd(cur_control); 
-		cur_control = getReferenceElement(getReferenceElement(leftNode, "leftPathId"), "controlCircle");
-		leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');
-	}
-}
 ///////////////////////////////////////Misc/Functions///////////////////////////////////////////////////
 
 //Add actions to clone
