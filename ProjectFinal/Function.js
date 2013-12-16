@@ -687,6 +687,75 @@ function undoRedoControls(){
     }
 }
 
+///////////////////////////////////////////Save/Load Functions///////////////////////////////////////////////////
+
+function save() {
+	var masterFile = new Array();
+	var con_line, con_point, path, point; //Strings containing object information
+	
+	var A_NODE = getElement("pointA");
+	var TEMP_NODE = A_NODE;
+	
+	//Build control line data, control point data, point data and path data
+	while(TEMP_NODE.getAttribute("id") != "pointC"){
+		var TEMP_PATH = getReferenceElement(TEMP_NODE, "rightPathId");
+		var TEMP_CON_CIRCLE = getReferenceElement(TEMP_PATH, "controlCircle");
+		var TEMP_CON_LINE_1 = getReferenceElement(TEMP_CON_CIRCLE, "controlLineV");
+		var TEMP_CON_LINE_2 = getReferenceElement(TEMP_CON_CIRCLE, "controlLineH");
+		
+		con_line += "" + TEMP_CON_LINE_1.getAttribute("id");
+		con_line += " " + TEMP_CON_LINE_1.getAttribute("x1");
+		con_line += " " + TEMP_CON_LINE_1.getAttribute("y1");
+		con_line += " " + TEMP_CON_LINE_1.getAttribute("x2");
+		con_line += " " + TEMP_CON_LINE_1.getAttribute("y2");
+		con_line += " " + TEMP_CON_LINE_2.getAttribute("id");
+		con_line += " " + TEMP_CON_LINE_2.getAttribute("x1");
+		con_line += " " + TEMP_CON_LINE_2.getAttribute("y1");
+		con_line += " " + TEMP_CON_LINE_2.getAttribute("x2");
+		con_line += " " + TEMP_CON_LINE_2.getAttribute("y2") + " ";
+		
+		con_point += ""  + TEMP_CON_CIRCLE.getAttribute("id");
+		con_point += " " + TEMP_CON_CIRCLE.getAttribute("cx");
+		con_point += " " + TEMP_CON_CIRCLE.getAttribute("cy");
+		con_point += " " + TEMP_CON_CIRCLE.getAttribute("path"); //Path is a long string variable so this is wrapped in quotes. May need to be changed
+		con_point += " " + TEMP_CON_CIRCLE.getAttribute("controlLineV");
+		con_point += " " + TEMP_CON_CIRCLE.getAttribute("controlLineH") + " ";
+		
+		path += "" + TEMP_PATH.getAttribute("id");
+		path += " \"" + TEMP_PATH.getAttribute("d");	//Path is a long string variable so this is wrapped in quotes. May need to be changed
+		path += "\" " + TEMP_PATH.getAttribute("leftNodeId");
+		path += " " + TEMP_PATH.getAttribute("rightNodeId");
+		path += " " + TEMP_PATH.getAttribute("controlCircle") + " ";
+		
+		point += "" + TEMP_NODE.getAttribute("id");
+		point += " " + TEMP_NODE.getAttribute("cx");
+		point += " " + TEMP_NODE.getAttribute("cy");
+		if(TEMP_NODE.getAttribute("id") != "pointA")
+			point += " " + TEMP_NODE.getAttribute("leftPathId");
+		else
+			point += " null";
+		point += " " + TEMP_NODE.getAttribute("rightPathId") + " ";
+		
+		TEMP_NODE = getReferenceElement(getReferenceElement(TEMP_NODE, "rightPathId"), "rightNodeId");
+	}
+	
+	//fill in where temp node = pointC
+	point += "" + TEMP_NODE.getAttribute("id");
+	point += " " + TEMP_NODE.getAttribute("cx");
+	point += " " + TEMP_NODE.getAttribute("cy");
+	point += " " + TEMP_NODE.getAttribute("leftPathId");
+	point += " null";
+		
+	masterFile[0] = "" + con_line + "\n" + con_point + "\n" + path + "\n" + point;
+	
+	var blob = new Blob(masterFile, {type: "text/plain;charset=utf-8"});
+	saveAs(blob, "SVG_Graph.txt");
+}
+
+function load() {
+
+}
+
 /////////////////////////////////////Create/Function/Objects///////////////////////////////////////////////////
 
 function createControlLine(id,x1,y1,x2,y2){
