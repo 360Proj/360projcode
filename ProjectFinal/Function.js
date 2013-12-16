@@ -324,12 +324,14 @@ function add(){
     //check if enough room to add new point
     if(!addValidate(X, leftNode, rightNode))
         return;
-
-
+	
     addUndoState();
     idGlobal += 1;      //update id
     var oldControlX, newControlX;
     var controlCircle = getReferenceElement(this, "controlCircle");
+	
+	//Are we adding the new point to the left or right of the path's control point? true = left, false = right
+	var smoothDir = getSmoothDirection(controlCircle, X);
 
     //get control x values for old and new control circles
     oldControlX = boundsCheck(controlCircle.getAttribute("cx"), parseInt(getReferenceElement(this, "leftNodeId").getAttribute("cx"))+radius, X-radius);
@@ -364,7 +366,10 @@ function add(){
     moveToFront(rightNode);
 	
 	//Smooth graph after adding new point
-	smoothAdd(getElement("controlCircle"+idGlobal));
+	if(smoothDir)
+		smoothLeft(getElement("controlCircle"+idGlobal));
+	else
+		smoothRight(getReferenceElement(getReferenceElement(getElement("Point"+idGlobal), "leftPathId"), "controlCircle"));
 
     //update derivative
     top.Deriv.addPoint(idGlobal, X, Y, leftNode, rightNode, controlCircle, getElement("controlCircle"+idGlobal));
@@ -534,7 +539,7 @@ function smoothing(){
 }
 
 //Try to smooth the graph after adding a point
-function smoothAdd(cpoint){
+function smoothLeft(cpoint){
 
  	var X = cpoint.getAttribute('cx');
     var Y = cpoint.getAttribute('cy');
@@ -555,6 +560,26 @@ function smoothAdd(cpoint){
     updatePathsControlPoint(leftPath, leftPointControl.getAttribute('cx'), newY);
 }
 
+function smoothRight(cpoint){
+
+ 	var X = cpoint.getAttribute('cx');
+    var Y = cpoint.getAttribute('cy');
+    var rightNode = getReferenceElement(getReferenceElement(cpoint, 'path'), 'rightNodeId');
+
+    if(rightNode.getAttribute('id') == 'pointC')      //if right node is end we can't smooth
+        return;
+
+    var rightPath = getReferenceElement(rightNode, 'rightPathId');
+    var rightPointControl = getReferenceElement(rightPath, 'controlCircle');
+
+    //calculate newY + check its in bounds
+    var newY = smoothingCalculation(X,Y,rightNode.getAttribute('cx'),rightNode.getAttribute('cy'),rightPointControl.getAttribute('cx'));
+    newY = boundsCheck(newY, 0 + radius, height - radius);
+
+    //update controls + path
+    updateControlCircle(rightPointControl, rightPointControl.getAttribute('cx'), newY);
+    updatePathsControlPoint(rightPath, rightPointControl.getAttribute('cx'), newY);
+}
 //Remove all non-smooth points from the graph
 function smoothAll() {
 
@@ -570,10 +595,16 @@ function smoothAll() {
 	while(leftNode.getAttribute("id") != "pointA") { //continue smoothing points until we've reached the leftmost control
 		//Recycle smoothAdd function.  There's some redundancy in node checking
 		//but it does what we want without rewriting the smooth function
-		smoothAdd(cur_control); 
+		smoothLeft(cur_control); 
 		cur_control = getReferenceElement(getReferenceElement(leftNode, "leftPathId"), "controlCircle");
 		leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');
 	}
+}
+
+function getSmoothDirection(control, X) {
+
+	ctrlX = control.getAttribute("cx");
+	return X < ctrlX; //true = smooth left, false = smooth right
 }
 ///////////////////////////////////////Misc/Functions///////////////////////////////////////////////////
 
