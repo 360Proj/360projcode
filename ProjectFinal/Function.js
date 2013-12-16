@@ -547,7 +547,7 @@ function smoothing(el){
 }
 
 //Function to smooth all points from left to right
-function smoothAll(){
+function smoothAllMac(){
     //Gather all elements and their x co-ordinates into arrays
     var els = [];
     var xpoints = [];
@@ -583,6 +583,27 @@ function smoothAll(){
         addUndoState();
         smoothing(els[zeroOut]);
     }
+}
+
+//Function to smooth all points from left to right
+function smoothAllPC() {
+
+	//Get the right most control point
+	var pointC = getElement("pointC");
+	var cur_control = getReferenceElement(getReferenceElement(pointC, "leftPathId"), "controlCircle");
+	var leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');	
+	
+	//Add undo state
+	if(leftNode.getAttribute("id") != "pointA")
+		addUndoState();
+	
+	while(leftNode.getAttribute("id") != "pointA") { //continue smoothing points until we've reached the leftmost control
+		//Recycle smoothAdd function.  There's some redundancy in node checking
+		//but it does what we want without rewriting the smooth function
+		smoothing(cur_control); 
+		cur_control = getReferenceElement(getReferenceElement(leftNode, "leftPathId"), "controlCircle");
+		leftNode = getReferenceElement(getReferenceElement(cur_control, 'path'), 'leftNodeId');
+	}
 } 
 
 //Smooth from left to right instead of right to left
