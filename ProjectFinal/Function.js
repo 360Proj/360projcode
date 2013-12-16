@@ -568,6 +568,8 @@ function smoothAllMac(){
         i++;
     }
 
+    addUndoState();
+
     //performs smooth on each point from right to left on the graph. (as if you right clicked each point)
     for (var k = 1; k <= i ; k++){
         var curElx = null;
@@ -580,7 +582,6 @@ function smoothAllMac(){
         }
 
         xpoints[zeroOut] = 0;
-        addUndoState();
         smoothing(els[zeroOut]);
     }
 }
