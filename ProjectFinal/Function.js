@@ -511,14 +511,23 @@ function smoothingCalculation(thisX, thisY, leftNodeX, leftNodeY, leftContX){
         parseFloat(thisX) + ((parseFloat(thisY) - parseFloat(leftNodeY))/(parseFloat(thisX) - parseFloat(leftNodeX))) * parseFloat(leftContX);
 }
 
-function smoothing(){
 
-   	if(typeof event != 'undefined') event.preventDefault();          //prevent context menu showing
 
-    var X = this.getAttribute('cx');
-    var Y = this.getAttribute('cy');
-    var leftNode = getReferenceElement(getReferenceElement(this, 'path'), 'leftNodeId');
+function smoothing(el){
 
+    if(typeof event != 'undefined') event.preventDefault();          //prevent context menu showing
+
+    if (el != null){
+        var X = el.getAttribute('cx');
+        var Y = el.getAttribute('cy');
+        var leftNode = getReferenceElement(getReferenceElement(el, 'path'), 'leftNodeId');
+    }
+
+    else{
+        var X = this.getAttribute('cx');
+        var Y = this.getAttribute('cy');
+        var leftNode = getReferenceElement(getReferenceElement(this, 'path'), 'leftNodeId');
+    }
 
     if(leftNode.getAttribute('id') == 'pointA')      //if left node is start can't smooth
         return;
@@ -537,6 +546,46 @@ function smoothing(){
     //update Derivative
     top.Deriv.movedControl(getReferenceElement(leftPath, 'leftNodeId'), leftNode, leftPointControl.getAttribute('cx'), newY);
 }
+
+function smoothAll(){
+    var els = [];
+    var xpoints = [];
+
+    els[1] = getElement("controlCircleMain2"); //The problem lies with this point
+
+    xpoints[1] = els[1].getAttribute("cx");
+    
+    
+    var i = 1
+    var zeroOut = 1;
+
+    if (getElement("controlCircle1") != null){
+        i = 2;
+    }
+
+
+    while(getElement("controlCircle"+(i-1)) != null){
+        els[i] = getElement("controlCircle"+(i-1));
+        xpoints[i] = els[i].getAttribute("cx");
+        i++;
+    }
+
+    for (var k = 1; k <= i ; k++){
+        var curElx = null;
+
+        for(var j = 1; j <= i; j++){
+            if (xpoints[j] > curElx){
+                curElx = xpoints[j];
+                zeroOut = j;
+            }
+        }
+
+        xpoints[zeroOut] = 0;
+        smoothing(els[zeroOut]);
+    }
+    
+
+} 
 
 //Try to smooth the graph after adding a point
 function smoothLeft(cpoint){
