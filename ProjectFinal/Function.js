@@ -754,6 +754,62 @@ function save() {
 
 function load() {
 
+    var fileInput = document.getElementById('file');
+    var fileDisplayArea = document.getElementById('test');
+    var graphinfo;
+
+    //remove all points
+
+    d3.selectAll(".controlLine").remove();
+    d3.selectAll(".controlPoint").remove();
+    d3.selectAll(".path").remove();
+    d3.selectAll(".point").remove();
+
+    fileInput.addEventListener('change', function(e) {
+      var file = fileInput.files[0];
+            var textType = /text.*/;
+
+            if (file.type.match(textType)) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    graphinfo = reader.result;
+                    graphinfo = graphinfo.replace("undefined", "");
+                    graphinfo = graphinfo.split(" ");
+
+                    var i = 0;
+                    while(graphinfo[i].substring(0, 7) == "dotLine"){
+                        createControlLine(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4]);
+                        i+=5;
+                        graphinfo[i] = graphinfo[i].replace("undefined", "");
+                    }
+
+                    while(graphinfo[i].substring(0, 14).search("controlCircle") != -1){
+                        createControlPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4], graphinfo[i+5]);
+                        i+=6;
+                        graphinfo[i] = graphinfo[i].replace("undefined", "");
+                        //fileDisplayArea.innerText = graphinfo[i]+ graphinfo[i+1]+'"' + graphinfo[i+2] + graphinfo[i+3]
+                    }
+
+                    while(graphinfo[i].substring(0, 10).search("Path") != -1){
+                        createPath(graphinfo[i], [graphinfo[i+1].substring(1), graphinfo[i+2], graphinfo[i+3], graphinfo[i+4], graphinfo[i+5], graphinfo[i+6], graphinfo[i+7], graphinfo[i+8].substring(0, graphinfo[i+8].length - 1)].join(" "), graphinfo[i+9], graphinfo[i+10], graphinfo[i+11]);
+                        i+=12;
+                        graphinfo[i] = graphinfo[i].replace("undefined", "");
+                    }
+                    while(graphinfo[i] != null && graphinfo[i].substring(0, 6).search(/point/i) != -1){
+                        createPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4]);
+                        i+=5;
+                    }
+                    //finish adding parts
+                }
+
+                reader.readAsText(file);    
+            } else {
+                fileDisplayArea.innerText = "File not supported!"
+            }
+    });
+
+    
 }
 
 /////////////////////////////////////Create/Function/Objects///////////////////////////////////////////////////
