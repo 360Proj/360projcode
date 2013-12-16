@@ -364,15 +364,15 @@ function add(){
 
     //Moves right node on top of line
     moveToFront(rightNode);
+
+    //update derivative
+    top.Deriv.addPoint(idGlobal, X, Y, leftNode, rightNode, controlCircle, getElement("controlCircle"+idGlobal));
 	
 	//Smooth graph after adding new point
 	if(smoothDir)
 		smoothLeft(getElement("controlCircle"+idGlobal));
 	else
 		smoothRight(getReferenceElement(getReferenceElement(getElement("Point"+idGlobal), "leftPathId"), "controlCircle"));
-
-    //update derivative
-    top.Deriv.addPoint(idGlobal, X, Y, leftNode, rightNode, controlCircle, getElement("controlCircle"+idGlobal));
 }
 
 function remove(){
@@ -607,6 +607,9 @@ function smoothLeft(cpoint){
     //update controls + path
     updateControlCircle(leftPointControl, leftPointControl.getAttribute('cx'), newY);
     updatePathsControlPoint(leftPath, leftPointControl.getAttribute('cx'), newY);
+	
+    //update Derivative
+    top.Deriv.movedControl(getReferenceElement(leftPath, 'leftNodeId'), leftNode, leftPointControl.getAttribute('cx'), newY);
 }
 
 function smoothRight(cpoint){
@@ -628,6 +631,9 @@ function smoothRight(cpoint){
     //update controls + path
     updateControlCircle(rightPointControl, rightPointControl.getAttribute('cx'), newY);
     updatePathsControlPoint(rightPath, rightPointControl.getAttribute('cx'), newY);
+	
+    //update Derivative
+    top.Deriv.movedControl(getReferenceElement(rightPath, 'rightNodeId'), rightNode, rightPointControl.getAttribute('cx'), newY);
 }
 //Remove all non-smooth points from the graph
 function smoothAll() {
