@@ -312,6 +312,15 @@ function restore(x1, y1, x2, y2, controlX, controlY){
     restoreSD(x1, newY1, x2, newY2);
 }
 
+///////////////////////////////Remove//////////////////////////////
+
+function removePoints(){
+    d3.selectAll(".line").remove();
+    d3.selectAll(".dPoint").remove();
+    removeSDPoints();
+}
+
+
 ///////////////////////////////Create/Derivative/Elements//////////////////////////////
 
 function createLine(id, x1, y1, x2, y2, lp, rp){

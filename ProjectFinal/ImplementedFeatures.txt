@@ -1,8 +1,9 @@
-﻿Implemented Features
+Implemented Features
 
 
--Full functionality(when file is on server) in all browsers. Limited on tablets.
+-Full functionality(when files are on server) in all browsers. Limited on tablets.
         -fixed right clicks
         -fixed dragging problems
 -Points are now added smoothly
 -Smooth all function for PC and Mac
+-Save/Load function

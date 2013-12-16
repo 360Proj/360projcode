@@ -758,13 +758,9 @@ function load() {
     var fileDisplayArea = document.getElementById('test');
     var graphinfo;
 
-    //remove all points
 
-    d3.selectAll(".controlLine").remove();
-    d3.selectAll(".controlPoint").remove();
-    d3.selectAll(".path").remove();
-    d3.selectAll(".point").remove();
 
+    //Load file and tranlate into graph
     fileInput.addEventListener('change', function(e) {
       var file = fileInput.files[0];
             var textType = /text.*/;
@@ -773,6 +769,14 @@ function load() {
                 var reader = new FileReader();
 
                 reader.onload = function(e) {
+                    //remove all points
+
+                    d3.selectAll(".controlLine").remove();
+                    d3.selectAll(".controlPoint").remove();
+                    d3.selectAll(".path").remove();
+                    d3.selectAll(".point").remove();
+                    top.Deriv.removePoints();
+
                     graphinfo = reader.result;
                     graphinfo = graphinfo.replace("undefined", "");
                     graphinfo = graphinfo.split(" ");
@@ -788,7 +792,6 @@ function load() {
                         createControlPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4], graphinfo[i+5]);
                         i+=6;
                         graphinfo[i] = graphinfo[i].replace("undefined", "");
-                        //fileDisplayArea.innerText = graphinfo[i]+ graphinfo[i+1]+'"' + graphinfo[i+2] + graphinfo[i+3]
                     }
 
                     while(graphinfo[i].substring(0, 10).search("Path") != -1){
@@ -800,7 +803,6 @@ function load() {
                         createPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4]);
                         i+=5;
                     }
-                    //finish adding parts
                 }
 
                 reader.readAsText(file);    

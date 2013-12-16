@@ -1,3 +1,4 @@
+
 //global variables
 //yScaleSD is a constant used to help visualize the second derivative because of
 //scaling issues with the second derivative view
@@ -140,6 +141,12 @@ function removeSDMidPoint(id, leftPoint, rightPoint){
 
 }
 
+function removeSDPoints()
+{
+    d3.selectAll(".SDLine").remove();
+    d3.selectAll(".SDPoint").remove();
+    
+}
 /////////////////////////////////Undo/Redo///////////////////////////////////////
 
 function addSDUndoState(){
