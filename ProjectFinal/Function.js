@@ -746,7 +746,7 @@ function save() {
 	point += " " + TEMP_NODE.getAttribute("leftPathId");
 	point += " null";
 		
-	masterFile[0] = "" + con_line + "\n" + con_point + "\n" + path + "\n" + point;
+	masterFile[0] = "" + con_line + con_point + path + point;
 	
 	var blob = new Blob(masterFile, {type: "text/plain;charset=utf-8"});
 	saveAs(blob, "SVG_Graph.txt");
@@ -757,8 +757,6 @@ function load() {
     var fileInput = document.getElementById('file');
     var fileDisplayArea = document.getElementById('test');
     var graphinfo;
-
-
 
     //Load file and tranlate into graph
     fileInput.addEventListener('change', function(e) {
@@ -800,18 +798,24 @@ function load() {
                         graphinfo[i] = graphinfo[i].replace("undefined", "");
                     }
                     while(graphinfo[i] != null && graphinfo[i].substring(0, 6).search(/point/i) != -1){
-                        createPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4]);
+						if(graphinfo[i] == "pointA")
+							createPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], null, graphinfo[i+4]);
+						else if(graphinfo[i] == "pointC")
+							createPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], null);
+						else
+							createPoint(graphinfo[i], graphinfo[i+1], graphinfo[i+2], graphinfo[i+3], graphinfo[i+4]);
                         i+=5;
                     }
+					
+				    vizSVG = d3.select("#innerSvg");
+					reAnimate();
                 }
 
                 reader.readAsText(file);    
             } else {
                 fileDisplayArea.innerText = "File not supported!"
             }
-    });
-
-    
+    });   
 }
 
 /////////////////////////////////////Create/Function/Objects///////////////////////////////////////////////////

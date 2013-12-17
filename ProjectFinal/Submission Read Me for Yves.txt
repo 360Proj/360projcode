@@ -1,0 +1,21 @@
+ISSUES:
+
+	Loading and saving files in javascript is a very experimental and "in-development" process.  
+	Currently it's un-standardized and largely unsupported because of numerous security problems.  In spite of these
+	issues we were able to successfully find a method to save data as a blob and save it to the download directory
+	of the User computer (untested for tablets).
+	
+CURRENT BUGS:
+
+	Right clicking: Firefox still displays a context window when the user right clicks, but every browser now has right click functionality.
+	Touch Screens: Many features unavailable for tablets and touch screen devices, most notably any feature requiring a right-click
+	Loading a graph: The first and second derivative don't load or update properly after loading a graph from your local files.  
+		Also, the two end points (point A and point C) snap off of the line if dragged too far left or right.  Finally, the smooth-all
+		and right-click smoothing functions don't work properly for the two left-most control points.  
+		
+FUTURE IMPLEMENTATIONS:
+
+	Fixing the bugs the loading a graph injects into the system.
+	Maybe changing the save function to save the graph in PLQ and PHQ formats?
+	Implementing piece-wise linear approximations as a seperate graph window in the derivative window.
+	
