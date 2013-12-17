@@ -7,3 +7,4 @@ Implemented Features
 -Points are now added smoothly
 -Smooth all function for PC and Mac
 -Save/Load function
+	-Implemented using text file rather than plq format due to links given requiring payment
